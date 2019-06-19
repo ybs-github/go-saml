@@ -41,9 +41,11 @@ func (s *ServiceProviderSettings) Init() (err error) {
 		}
 	}
 
-	s.iDPPublicCert, err = util.LoadCertificate(s.IDPPublicCertPath)
-	if err != nil {
-		panic(err)
+	if s.IDPPublicCertPath != "" {
+		s.iDPPublicCert, err = util.LoadCertificate(s.IDPPublicCertPath)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	return nil
@@ -61,6 +63,10 @@ func (s *ServiceProviderSettings) PrivateKey() string {
 		panic("Must call ServiceProviderSettings.Init() first")
 	}
 	return s.privateKey
+}
+
+func (s *ServiceProviderSettings) SetIDPPublicCert(cert string) {
+	s.iDPPublicCert = cert
 }
 
 func (s *ServiceProviderSettings) IDPPublicCert() string {
