@@ -1,6 +1,7 @@
 package saml
 
 import (
+	"fmt"
 	"errors"
 	"io/ioutil"
 	"os"
@@ -45,9 +46,13 @@ func sign(xml string, privateKeyPath string, id string) (string, error) {
 	defer deleteTempFile(samlXmlsecOutput.Name())
 	samlXmlsecOutput.Close()
 
-	// fmt.Println("xmlsec1", "--sign", "--privkey-pem", privateKeyPath,
-	// 	"--id-attr:ID", id,
-	// 	"--output", samlXmlsecOutput.Name(), samlXmlsecInput.Name())
+	fmt.Println("Signing XML")
+	fmt.Println("Private Key Path: " + privateKeyPath)
+	fmt.Println("XML:")
+	fmt.Println("<?xml version='1.0' encoding='UTF-8'?>\n" + xml)
+	fmt.Println("xmlsec1", "--sign", "--privkey-pem", privateKeyPath,
+			"--id-attr:ID", id,
+			"--output", samlXmlsecOutput.Name(), samlXmlsecInput.Name())
 	output, err := exec.Command("xmlsec1", "--sign", "--privkey-pem", privateKeyPath,
 		"--id-attr:ID", id,
 		"--output", samlXmlsecOutput.Name(), samlXmlsecInput.Name()).CombinedOutput()
